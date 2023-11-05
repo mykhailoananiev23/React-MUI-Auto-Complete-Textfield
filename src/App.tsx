@@ -31,7 +31,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App" style={{marginTop:'200px'}}>
       <Container maxWidth="sm">
         {/* <AutoTextField /> */}
         <AutoTextField guess={callback1} complete={callback2} multiline />

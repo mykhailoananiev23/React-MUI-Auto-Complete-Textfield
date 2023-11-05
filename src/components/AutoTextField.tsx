@@ -4,7 +4,8 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/system";
-import { Icon, Typography } from "@mui/material";
+import { Grid, Icon, Typography } from "@mui/material";
+import HomeIcon from '@mui/icons-material/Home';
 
 const options: string[] = ["Option 1", "Option 2", "Option 3"];
 
@@ -70,7 +71,6 @@ const MyComponent = ({ guess, complete, multiline }: any) => {
       cursorY: clientY,
       letter: ele.description,
     };
-    console.log(clientX, clientY, ele.descaiptiong);
     complete(result);
   };
 
@@ -85,24 +85,33 @@ const MyComponent = ({ guess, complete, multiline }: any) => {
       />
       {showDropdown && DropdownData.length > 0 && (
         <DropdownList sx={{ width: dropdownWidth }}>
-          {multiline ? (
-            DropdownData.map((ele: any, idx: any) => (
-              <DropdownItem
-                key={idx}
-                onClick={(e) => handleOptionClick(e, ele)}
-              >
-                <Icon>{ele.icon}</Icon>
-                <Typography>{ele.description}</Typography>
-                <Typography variant="caption">{ele.type}</Typography>
-              </DropdownItem>
-            ))
-          ) : (
-            DropdownData.map((ele: any, idx: any) => (
-            <DropdownItem key={idx} onClick={(e) => handleOptionClick(e, ele)}>
-              <Typography>{ele.description}</Typography>
-            </DropdownItem>
-            ))
-          )}
+          {multiline
+            ? DropdownData.map((ele: any, idx: any) => (
+                <DropdownItem
+                  key={idx}
+                  onClick={(e) => handleOptionClick(e, ele)}
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={2}>
+                      <HomeIcon/>
+                    </Grid>
+                    <Grid item xs={8}>
+                      <Typography>{ele.description}</Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography variant="caption">{ele.type}</Typography>
+                    </Grid>
+                  </Grid>
+                </DropdownItem>
+              ))
+            : DropdownData.map((ele: any, idx: any) => (
+                <DropdownItem
+                  key={idx}
+                  onClick={(e) => handleOptionClick(e, ele)}
+                >
+                  <Typography>{ele.description}</Typography>
+                </DropdownItem>
+              ))}
         </DropdownList>
       )}
     </div>
