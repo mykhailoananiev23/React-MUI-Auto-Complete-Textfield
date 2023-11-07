@@ -31,7 +31,7 @@ const MyComponent = ({ guess, complete, multiline }: any) => {
   const textFieldRef = useRef<HTMLInputElement | null>(null);
   const [DropdownData, setDropdownData] = useState([]);
   const [oldPosition, setOldPosition] = useState(-1)
-  const [currentPosition, setcurrentPosition] = useState(0)
+  const [currentPosition, setcurrentPosition] = useState(-1)
 
   useEffect(() => {
     const handleResize = () => {
@@ -49,24 +49,33 @@ const MyComponent = ({ guess, complete, multiline }: any) => {
 
   const handleInputChange = (event: any) => {
     const inst = event.target;
-    // if(inst.value.charAt(inst.selectionStart-1) !== "{")}
+    const value = inst.value;
+    const cursorPosition = event.target.selectionStart;
+
+    setcurrentPosition(cursorPosition)
     setInputValue(inst.value);
-    if(currentPosition !== oldPosition){
-
+    if(value.slice(-1) === "{"){
+      event.target.selectionStart = currentPosition;
+      setInputValue(prev => prev + "}");
     }
-    setShowDropdown(true)
-    setOldPosition(currentPosition);
   };
-
+  
   const handleOptionClick = (e: any, ele: any) => {
     
   };
-
-  const handleKeyDown = (e: any) => {
+  
+  const handleKeyUp = (e: any) => {
+    const inst = e.target
     var key = e.key;
-    if(key==="{")
-    setcurrentPosition(e.target.selectionStart)
+    if(key==="{"){
+      setcurrentPosition(inst.selectionStart)
+      // e.target.selctionStart = 
+    }
   }
+
+  useEffect(() => {
+    // textFieldRef?.current?.selectionStart -=1;
+  }, [inputValue]);
 
   return (
     <div style={{ position: "relative" }}>
@@ -76,7 +85,7 @@ const MyComponent = ({ guess, complete, multiline }: any) => {
         onChange={handleInputChange}
         inputRef={textFieldRef}
         sx={{ width: "100%" }}
-        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
       />
       {showDropdown && DropdownData.length > 0 && (
         <DropdownList sx={{ width: dropdownWidth }}>
@@ -109,6 +118,8 @@ const MyComponent = ({ guess, complete, multiline }: any) => {
               ))}
         </DropdownList>
       )}
+      <div>{currentPosition}</div>
+      <div>{inputValue}</div>
     </div>
   );
 };
