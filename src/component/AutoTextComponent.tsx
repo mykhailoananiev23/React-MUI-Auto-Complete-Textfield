@@ -49,18 +49,22 @@ const AutoTextComponent = ({
   const [focused, setfocused] = React.useState(false);
   const [value, setvalue] = React.useState<string>("");
   const [selectedStr, setSelectedStr] = React.useState<string>("");
-  const [selection, setSelection] = React.useState<any>(null);
   const [divideStr, setDivideStr] = React.useState<any>("");
-  const [matchedData, setMatchedData] = React.useState<any>([]);
-  const [options, setOptions] = React.useState<any>([]);
   const [DropdownData, setDropdownData] = React.useState<any>([]);
   const [showDropdown, setShowDropdown] = React.useState(false);
-  const [dropdownWidth, setDropdownWidth] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    if (divideStr) {
+      const guessingData = guess(divideStr);
+      if (guessingData.length > 0) {
+        setShowDropdown(true);
+        setDropdownData(guessingData);
+      }
+    }
+  }, [divideStr]);
 
   const handleChange = (value: any, viewUpdate: any) => {
     const cursorPos = viewUpdate.changes.sections[0];
-    const condStr = value.slice(cursorPos - 1, cursorPos + 1);
-    setSelection(JSON.stringify(viewUpdate.changes.sections));
     const divideStr = value.slice(0, cursorPos + 1);
     setSelectedStr(value.slice(0, cursorPos + 1));
     setDropdownData([]);
@@ -72,8 +76,6 @@ const AutoTextComponent = ({
         setShowDropdown(true);
         setDropdownData(guessingData);
       }
-      setOptions(guessingData);
-      setMatchedData(guessingData);
     }
     setvalue(value);
     const realStr = complete(value);
@@ -86,6 +88,12 @@ const AutoTextComponent = ({
 
   const handleBlur = () => {
     setfocused(false);
+  };
+
+  const handleKeyUp = (e: any) => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      setShowDropdown(false)
+    }
   };
 
   const handleOptionClick = (e: any, ele: any) => {
@@ -107,6 +115,7 @@ const AutoTextComponent = ({
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleChange}
+        onKeyUp={handleKeyUp}
         basicSetup={{ lineNumbers: false }}
       />
       {showDropdown && DropdownData.length > 0 && (
@@ -140,9 +149,6 @@ const AutoTextComponent = ({
             >
               String
             </div>
-            {/* <button style={{ position: "absolute", top: "5px", right: "15px" }}>
-              X
-            </button> */}
           </div>
           <div
             style={{
@@ -150,7 +156,7 @@ const AutoTextComponent = ({
               padding: "0px 10px",
               fontFamily: "math",
               lineHeight: "20px",
-              paddingBottom: "10px"
+              paddingBottom: "10px",
             }}
           >
             {displayStr}
