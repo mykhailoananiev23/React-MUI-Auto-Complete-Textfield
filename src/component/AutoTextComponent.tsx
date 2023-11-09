@@ -5,93 +5,109 @@ import { styled } from "@mui/system";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 
+const DefinedCodeMirror = styled(CodeMirror)`
+  border-radius: 10px 10px 0px 0px;
+  border: 1px solid grey;
+  padding: 5px;
+  font-size: 16px;
+  font-family: math;
+`;
+
 const DropdownList = styled(List)`
-position: absolute;
-background-color: #ffffff;
-border: 1px solid #cccccc;
-border-radius: 4px;
-max-height: 400px;
-overflow-y: auto;
-z-index: 10;
+  position: absolute;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 10;
 `;
 
 const StringDisplayBox = styled(Box)`
-position: absolute;
-background-color: lightgreen;
-max-height: 200px;
-overflow-y: auto;
-z-index: 5;
-`
-
-const DropdownItem = styled(ListItemButton)`
-&:hover {
-  background-color: #f5f5f5;
-}
+  position: absolute;
+  border-radius: 0px 0px 10px 10px;
+  color: #006600;
+  background: #99ffcc;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 5;
 `;
 
-const AutoTextComponent = ({guess, complete, multiline}: any): JSX.Element => {
+const DropdownItem = styled(ListItemButton)`
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
+const AutoTextComponent = ({
+  guess,
+  complete,
+  multiline,
+}: any): JSX.Element => {
   const CodeEditor = React.useRef<any>(null);
-  const [displayStr, setdisplayStr] = React.useState("")
-  const [focused, setfocused] = React.useState(false)
-  const [value, setvalue] = React.useState<string>("")
-  const [selectedStr, setSelectedStr] = React.useState<string>("")
+  const [displayStr, setdisplayStr] = React.useState("");
+  const [focused, setfocused] = React.useState(false);
+  const [value, setvalue] = React.useState<string>("");
+  const [selectedStr, setSelectedStr] = React.useState<string>("");
   const [selection, setSelection] = React.useState<any>(null);
-  const [divideStr, setDivideStr] = React.useState<any>("")
-  const [matchedData, setMatchedData] = React.useState<any>([])
-  const [options, setOptions] = React.useState<any>([])
+  const [divideStr, setDivideStr] = React.useState<any>("");
+  const [matchedData, setMatchedData] = React.useState<any>([]);
+  const [options, setOptions] = React.useState<any>([]);
   const [DropdownData, setDropdownData] = React.useState<any>([]);
   const [showDropdown, setShowDropdown] = React.useState(false);
   const [dropdownWidth, setDropdownWidth] = React.useState<number | null>(null);
 
   const handleChange = (value: any, viewUpdate: any) => {
     const cursorPos = viewUpdate.changes.sections[0];
-    const condStr = value.slice(cursorPos-1, cursorPos+1)
-    setSelection(JSON.stringify(viewUpdate.changes.sections))
-    const divideStr = value.slice(0, cursorPos+1);
-    setSelectedStr(value.slice(0, cursorPos+1))
-    setDropdownData([])
-    if(divideStr.includes("{{")){
-      var divide = divideStr.split("{{")
-      setDivideStr(divide.slice(-1))
+    const condStr = value.slice(cursorPos - 1, cursorPos + 1);
+    setSelection(JSON.stringify(viewUpdate.changes.sections));
+    const divideStr = value.slice(0, cursorPos + 1);
+    setSelectedStr(value.slice(0, cursorPos + 1));
+    setDropdownData([]);
+    if (divideStr.includes("{{")) {
+      var divide = divideStr.split("{{");
+      setDivideStr(divide.slice(-1));
       const guessingData = guess(divide.slice(-1));
-      if(guessingData.length > 0){
-        setShowDropdown(true)
-        setDropdownData(guessingData)
+      if (guessingData.length > 0) {
+        setShowDropdown(true);
+        setDropdownData(guessingData);
       }
-      setOptions(guessingData)
-      setMatchedData(guessingData)
+      setOptions(guessingData);
+      setMatchedData(guessingData);
     }
-    setvalue(value)
-    const realStr = complete(value)
-    setdisplayStr(realStr)
+    setvalue(value);
+    const realStr = complete(value);
+    setdisplayStr(realStr);
   };
 
   const handleFocus = () => {
-    setfocused(true)
-  }
+    setfocused(true);
+  };
 
   const handleBlur = () => {
-    setfocused(false)
-  }
+    setfocused(false);
+  };
 
   const handleOptionClick = (e: any, ele: any) => {
-    setShowDropdown(false)
+    setShowDropdown(false);
     var mid = selectedStr.lastIndexOf("{{");
     var oldStr = selectedStr.length;
-    var result = selectedStr.slice(0, mid) + "{{" + ele.description + value.slice(oldStr);
-    const realStr = complete(result)
-    setdisplayStr(realStr)
-    setvalue(result)
+    var result =
+      selectedStr.slice(0, mid) + "{{" + ele.description + value.slice(oldStr);
+    const realStr = complete(result);
+    setdisplayStr(realStr);
+    setvalue(result);
   };
 
   return (
-    <Box sx={{display: "relative"}}>
-      <CodeMirror
+    <Box sx={{ position: "relative" }}>
+      <DefinedCodeMirror
         ref={CodeEditor}
         value={value}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleChange}
+        basicSetup={{ lineNumbers: false }}
       />
       {showDropdown && DropdownData.length > 0 && (
         <DropdownList sx={{ width: "100%" }}>
@@ -112,12 +128,41 @@ const AutoTextComponent = ({guess, complete, multiline}: any): JSX.Element => {
           ))}
         </DropdownList>
       )}
-      {
-        focused ? 
+      {focused ? (
         <StringDisplayBox sx={{ width: "100%" }}>
-            {displayStr}
-        </StringDisplayBox> : null
-      }
+          <div style={{ textAlign: "left", width: "100%", paddingTop: "5px" }}>
+            <div
+              style={{
+                fontWeight: "bold",
+                fontFamily: "math",
+                paddingLeft: "10px",
+              }}
+            >
+              String
+            </div>
+            <button style={{ position: "absolute", top: "5px", right: "15px" }}>
+              X
+            </button>
+          </div>
+          <div
+            style={{
+              textAlign: "left",
+              padding: "0px 10px",
+              fontFamily: "math",
+              lineHeight: "20px",
+            }}
+          >
+            {" "}
+            test {displayStr}
+          </div>
+        </StringDisplayBox>
+      ) : null}
+      {/* <div>{selectedStr}</div>
+      <div>{selectedStr}</div>
+      <div>{selection}</div>
+      <div>{divideStr}</div>
+      <div>{divideStr.includes("}}") ? "" : divideStr}</div>
+      <div>{JSON.stringify(matchedData)}</div> */}
     </Box>
   );
 };
