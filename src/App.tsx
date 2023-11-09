@@ -104,7 +104,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <div style={{width: "500px"}}>
+      <div style={{width: "500px", margin: "auto"}}>
         <AutoTextComponent guess={callback1} complete={callback2} multiline />
       </div>
     </div>
