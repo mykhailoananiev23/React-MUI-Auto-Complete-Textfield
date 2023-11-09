@@ -1,41 +1,112 @@
-import React, { useState } from "react";
+import React from "react";
+import logo from "./logo.svg";
 import "./App.css";
-import AutoTextField from "./components/AutoTextField1";
-import Container from "@mui/material/Container";
+import AutoTextComponent from "./component/AutoTextComponent";
+
+const objArr = [
+  {
+    icon: "icon1",
+    id: 1,
+    description: "button1",
+    type: "objectA",
+  },
+  {
+    icon: "icon2",
+    id: 2,
+    description: "button2",
+    type: "objectB",
+  },
+  {
+    icon: "icon3",
+    id: 3,
+    description: "button3",
+    type: "objectC",
+  },
+  {
+    icon: "icon4",
+    id: 4,
+    description: "button4",
+    type: "objectD",
+  },
+  {
+    icon: "icon5",
+    id: 5,
+    description: "button5",
+    type: "objectE",
+  },
+  {
+    icon: "icon6",
+    id: 6,
+    description: "button6",
+    type: "objectF",
+  },
+  {
+    icon: "icon7",
+    id: 7,
+    description: "button7",
+    type: "objectG",
+  },
+  {
+    icon: "icon8",
+    id: 8,
+    description: "button8",
+    type: "objectH",
+  },
+  {
+    icon: "icon9",
+    id: 9,
+    description: "button9",
+    type: "objectI",
+  },
+  {
+    icon: "icon10",
+    id: 10,
+    description: "button10",
+    type: "objectJ",
+  },
+];
 
 function App() {
-  const [FilterDate, setFilterDate] = useState<any>([]);
-  const testData = [
-    { id: 1, description: "Description 1", type: "Type 1" },
-    { id: 2, description: "Description 2", type: "Type 2" },
-    { id: 3, description: "Description 3", type: "Type 3" },
-    { id: 4, description: "Description 4", type: "Type 4" },
-    { id: 5, description: "Description 5", type: "Type 5" },
-    { id: 6, description: "Description 6", type: "Type 6" },
-    { id: 7, description: "Description 7", type: "Type 7" },
-    { id: 8, description: "Description 8", type: "Type 8" },
-    { id: 9, description: "Description 9", type: "Type 9" },
-    { id: 10, description: "Description 10", type: "Type 10" },
-  ];
-
-  const callback1 = (text: any) => {
-    var result = testData.filter((item) =>
-      item.description.toLowerCase().includes(text.toLowerCase())
+  const callback1 = (str: string) => {
+    const matchedData = objArr.filter((ele) =>
+      ele.description.toLowerCase().includes(str)
     );
-    setFilterDate(result)
-    return result;
+    return matchedData;
   };
-  const callback2 = (str: any) => {
-    console.log(str)
-    return [];
+
+  const callback2 = (str: string) => {
+    const objMap = {};
+    objArr.forEach((obj:any) => {
+      objArr[obj.description] = obj;
+    });
+
+    const result = str.replace(/\{\{(.*?)\}\}/g, (match:any, placeholder:any) => {
+      const obj = objArr[placeholder];
+      return obj ? JSON.stringify(obj, null, 2) : match;
+    });
+
+    return result;
   };
 
   return (
-    <div className="App" style={{marginTop:'200px'}}>
-      <Container maxWidth="sm">
-        {/* <AutoTextField /> */}
-        <AutoTextField guess={callback1} complete={callback2} multiline />
-      </Container>
+    <div className="App">
+      {/* <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.tsx</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header> */}
+      <div style={{width: "500px"}}>
+        <AutoTextComponent guess={callback1} complete={callback2} multiline />
+      </div>
     </div>
   );
 }
