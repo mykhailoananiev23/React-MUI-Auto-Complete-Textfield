@@ -137,7 +137,7 @@ const AutoTextComponent = ({
           ))}
         </DropdownList>
       )}
-      {false && focused ? (
+      {focused ? (
         <StringDisplayBox sx={{ width: "100%" }}>
           <div style={{ textAlign: "left", width: "100%", paddingTop: "5px" }}>
             <div
