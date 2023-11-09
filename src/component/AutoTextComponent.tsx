@@ -140,9 +140,9 @@ const AutoTextComponent = ({
             >
               String
             </div>
-            <button style={{ position: "absolute", top: "5px", right: "15px" }}>
+            {/* <button style={{ position: "absolute", top: "5px", right: "15px" }}>
               X
-            </button>
+            </button> */}
           </div>
           <div
             style={{
@@ -150,19 +150,13 @@ const AutoTextComponent = ({
               padding: "0px 10px",
               fontFamily: "math",
               lineHeight: "20px",
+              paddingBottom: "10px"
             }}
           >
-            {" "}
-            test {displayStr}
+            {displayStr}
           </div>
         </StringDisplayBox>
       ) : null}
-      {/* <div>{selectedStr}</div>
-      <div>{selectedStr}</div>
-      <div>{selection}</div>
-      <div>{divideStr}</div>
-      <div>{divideStr.includes("}}") ? "" : divideStr}</div>
-      <div>{JSON.stringify(matchedData)}</div> */}
     </Box>
   );
 };
