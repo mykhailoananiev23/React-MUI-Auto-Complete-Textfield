@@ -10,7 +10,7 @@ position: absolute;
 background-color: #ffffff;
 border: 1px solid #cccccc;
 border-radius: 4px;
-max-height: 200px;
+max-height: 400px;
 overflow-y: auto;
 z-index: 10;
 `;
@@ -75,33 +75,20 @@ const AutoTextComponent = ({guess, complete, multiline}: any): JSX.Element => {
   }
 
   const handleOptionClick = (e: any, ele: any) => {
-    setDropdownData([])
-
-    const replacePartialButtonName = (input: string, partialButtonName: string, fullButtonName: string): string => {
-      const parts = input.split(partialButtonName);
-      const replacedInput = parts.join(fullButtonName);
-      return replacedInput;
-    };
-    
-    const input1 = "test is {{button";
-    const partialButtonName1 = "button1";
-    const fullButtonName1 = "{{button1}}";
-    
-    const result1 = replacePartialButtonName(input1, partialButtonName1, fullButtonName1);
-    console.log(result1); // Output: "test is {{button1}}"
-    
-    const input2 = "this is {{button1}} is {{button";
-    const partialButtonName2 = "button10";
-    const fullButtonName2 = "{{button10}}";
-    
-    const result2 = replacePartialButtonName(input2, partialButtonName2, fullButtonName2);
-    console.log(result2); // Output: "this is {{button1}} is {{button10}}"
+    setShowDropdown(false)
+    var mid = selectedStr.lastIndexOf("{{");
+    var oldStr = selectedStr.length;
+    var result = selectedStr.slice(0, mid) + "{{" + ele.description + value.slice(oldStr);
+    const realStr = complete(result)
+    setdisplayStr(realStr)
+    setvalue(result)
   };
 
   return (
     <Box sx={{display: "relative"}}>
       <CodeMirror
         ref={CodeEditor}
+        value={value}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleChange}
@@ -131,27 +118,6 @@ const AutoTextComponent = ({guess, complete, multiline}: any): JSX.Element => {
             {displayStr}
         </StringDisplayBox> : null
       }
-      <div>
-        {selectedStr}
-      </div>
-      <div>
-        {selection}
-      </div>
-      <div>
-        {
-          divideStr
-        }
-      </div>
-      <div>
-        {
-           divideStr.includes("}}") ? "":divideStr
-        }
-      </div>
-      <div>
-        {
-          JSON.stringify(matchedData)
-        }
-      </div>
     </Box>
   );
 };
